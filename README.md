@@ -10,7 +10,7 @@ and serving stored images for you.
 # Scripts Needed to build/ format / start / test application
 	npm run build
 	npm run format
-	node .\build\.
+	npm run start
 	npm run test
 	
 # Endpoints That Should Be Accessed
