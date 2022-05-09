@@ -42,52 +42,63 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkImageExistence = exports.sendImage = exports.imageProcess = void 0;
 var sharp_1 = __importDefault(require("sharp"));
 var path_1 = __importDefault(require("path"));
+var fs_1 = __importDefault(require("fs"));
 // Prepare directories
 var fullDir = path_1.default.join(__dirname, '/../../public/assets/full/');
 var thumbDir = path_1.default.join(__dirname, '/../../public/assets/thumb/');
 var imageProcess = function (req, res, next) {
-    console.log("processing");
     var width = Number(req.query.width);
     var height = Number(req.query.height);
-    (0, sharp_1.default)(fullDir + req.query.filename)
+    var name = req.query.filename + '.jpg';
+    (0, sharp_1.default)(fullDir + name)
         .resize(width, height)
-        .toFile(thumbDir + 'lol.png', function (err) {
+        .toFile(thumbDir + name, function (err) {
         if (err)
-            console.log(err);
+            res.send({ err: 'File Not Found' });
         else
             next();
     });
 };
 exports.imageProcess = imageProcess;
 var sendImage = function (req, res, next) {
-    res.sendFile(path_1.default.join(thumbDir, req.query.filename), function (err) {
+    var name = req.query.filename + '.jpg';
+    res.sendFile(path_1.default.join(thumbDir, name), function (err) {
         if (err) {
-            next();
-        }
-        else {
-            console.log('Sent:', req.query.filename);
+            res.send('Error while uploading');
         }
     });
 };
 exports.sendImage = sendImage;
-var checkImageExistence = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var width, height, data;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                width = Number(req.query.width);
-                height = Number(req.query.height);
-                return [4 /*yield*/, (0, sharp_1.default)(thumbDir + req.query.filename).metadata()];
-            case 1:
-                data = _a.sent();
-                if (data.width == width && data.height == height) {
-                    sendImage(req, res, next);
-                }
-                else {
+// Check if required image with specific dimentions is already in the cache
+// If it exist then send this image to the user
+// Else go to the following middleware
+var checkImageExistence = function (req, res, next) {
+    var width = Number(req.query.width);
+    var height = Number(req.query.height);
+    var name = req.query.filename + '.jpg';
+    fs_1.default.exists(thumbDir + name, function (isExist) { return __awaiter(void 0, void 0, void 0, function () {
+        var data;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!isExist) return [3 /*break*/, 2];
+                    return [4 /*yield*/, (0, sharp_1.default)(thumbDir + name).metadata()];
+                case 1:
+                    data = _a.sent();
+                    if (data.width == width && data.height == height) {
+                        //check if the dimentions of existing file is the same as provided
+                        sendImage(req, res, next);
+                    }
+                    else {
+                        next();
+                    }
+                    return [3 /*break*/, 3];
+                case 2:
                     next();
-                }
-                return [2 /*return*/];
-        }
-    });
-}); };
+                    _a.label = 3;
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); });
+};
 exports.checkImageExistence = checkImageExistence;

@@ -42,18 +42,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var imageProcess_1 = require("../../utils/imageProcess");
 var imageAPI = express_1.default.Router();
+// First use middleware to check if the image exist with same name and dimentions required
+// If so send the image from the cache folder "thumb"
+// Else Process the image and then send it to user
 imageAPI.get('/', imageProcess_1.checkImageExistence, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!req.query.filename) {
-                    return [2 /*return*/, res.send({ error: 'You must provide filename' })];
+                    return [2 /*return*/, res.send({ err: 'You must provide filename' })];
                 }
                 else if (!req.query.width) {
-                    return [2 /*return*/, res.send({ error: 'You must provide width' })];
+                    return [2 /*return*/, res.send({ err: 'You must provide width' })];
                 }
                 else if (!req.query.height) {
-                    return [2 /*return*/, res.send({ error: 'You must provide height' })];
+                    return [2 /*return*/, res.send({ err: 'You must provide height' })];
                 }
                 return [4 /*yield*/, (0, imageProcess_1.imageProcess)(req, res, next)];
             case 1:
@@ -61,7 +64,5 @@ imageAPI.get('/', imageProcess_1.checkImageExistence, function (req, res, next) 
                 return [2 /*return*/];
         }
     });
-}); }, imageProcess_1.sendImage, function (req, res) {
-    res.send('Image Not found! please place correct name for the image with extention ex image.jpg'); //////////////////////template
-});
+}); }, imageProcess_1.sendImage);
 exports.default = imageAPI;
