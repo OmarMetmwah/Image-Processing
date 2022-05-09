@@ -11,6 +11,7 @@ and serving stored images for you.
 {ip}:3000/api/image?filename={nameOfImageInFullFolderWithoutExtention}&height={height}&width={width}
 replace any thing between brackets with desired value.
 So user have to provide three parameters (name of file , width, heigth)
+
 example:
 http://127.0.0.1:3000/api/image?filename=lol&height=150&width=150
 
