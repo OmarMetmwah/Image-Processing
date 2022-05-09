@@ -12,6 +12,10 @@ and serving stored images for you.
 	npm run format
 	node .\build\.
 	npm run test
+	
+# Endpoints That Should Be Accessed
+{IP}:3000/api/image?filename={nameOfImageInFullFolderWithoutExtention}&height={height}&width={width}
+replace any thing between brackets with desired value ex. http://127.0.0.1:3000/api/image?filename=logo&height=150&width=150
 
 # Development Phases:
 ## 1• Initialize project and Configure Dependencies ##
