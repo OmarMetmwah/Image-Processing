@@ -7,6 +7,12 @@ The second use case is as a library to serve properly scaled versions of your im
 Rather than needing to resize and upload multiple copies of the same image to be used throughout your site, the API you create will handle resizing 
 and serving stored images for you.
 
+# Scripts Needed to build/ format / start / test application
+	npm run build
+	npm run format
+	node .\build\.
+	npm run test
+
 # Development Phases:
 ## 1• Initialize project and Configure Dependencies ##
 Set up your project structure. Create folders and files for what is anticipated would be needed for the project.
