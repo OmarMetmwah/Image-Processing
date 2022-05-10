@@ -7,16 +7,21 @@ The second use case is as a library to serve properly scaled versions of your im
 Rather than needing to resize and upload multiple copies of the same image to be used throughout your site, the API you create will handle resizing 
 and serving stored images for you.
 
+# Endpoints That Should Be Accessed
+{ip}:3000/api/image?filename={nameOfImageInFullFolderWithoutExtention}&height={height}&width={width}
+replace any thing between brackets with desired value.
+So user have to provide three parameters (name of file , width, heigth)
+
+example:
+http://127.0.0.1:3000/api/image?filename=lol&height=150&width=150
+
+
 # Scripts Needed to build/ format / start / test application
 	npm run build
 	npm run format
-	node .\build\.
+	npm run start
 	npm run test
 	
-# Endpoints That Should Be Accessed
-{IP}:3000/api/image?filename={nameOfImageInFullFolderWithoutExtention}&height={height}&width={width}
-replace any thing between brackets with desired value ex. http://127.0.0.1:3000/api/image?filename=logo&height=150&width=150
-
 # Development Phases:
 ## 1• Initialize project and Configure Dependencies ##
 Set up your project structure. Create folders and files for what is anticipated would be needed for the project.
