@@ -8,7 +8,6 @@ var imageAPI_1 = __importDefault(require("./api/imageAPI"));
 var routes = express_1.default.Router();
 routes.get('/', function (req, res) {
     res.send('Welcome to our image processing api please provide image name or url and widrh and height parameters');
-    ///////////////////////////////////////prepare view
 });
 routes.use('/image', imageAPI_1.default);
 exports.default = routes;

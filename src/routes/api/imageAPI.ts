@@ -1,4 +1,5 @@
-import express from 'express';
+import express, { NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 import {
   imageProcess,
@@ -14,13 +15,16 @@ const imageAPI = express.Router();
 imageAPI.get(
   '/',
   checkImageExistence,
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     if (!req.query.filename) {
-      return res.send({ err: 'You must provide filename' });
-    } else if (!req.query.width) {
-      return res.send({ err: 'You must provide width' });
-    } else if (!req.query.height) {
-      return res.send({ err: 'You must provide height' });
+      res.send({ err: 'You must provide filename' });
+      return;
+    } else if (!req.query.width || !Number(req.query.width)) {
+      res.send({ err: 'You must provide numeric width parameter' });
+      return;
+    } else if (!req.query.height || !Number(req.query.height)) {
+      res.send({ err: 'You must provide numeric height parameter' });
+      return;
     }
     await imageProcess(req, res, next);
   },

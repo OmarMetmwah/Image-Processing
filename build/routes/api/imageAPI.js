@@ -50,13 +50,16 @@ imageAPI.get('/', imageProcess_1.checkImageExistence, function (req, res, next) 
         switch (_a.label) {
             case 0:
                 if (!req.query.filename) {
-                    return [2 /*return*/, res.send({ err: 'You must provide filename' })];
+                    res.send({ err: 'You must provide filename' });
+                    return [2 /*return*/];
                 }
-                else if (!req.query.width) {
-                    return [2 /*return*/, res.send({ err: 'You must provide width' })];
+                else if (!req.query.width || !Number(req.query.width)) {
+                    res.send({ err: 'You must provide numeric width parameter' });
+                    return [2 /*return*/];
                 }
-                else if (!req.query.height) {
-                    return [2 /*return*/, res.send({ err: 'You must provide height' })];
+                else if (!req.query.height || !Number(req.query.height)) {
+                    res.send({ err: 'You must provide numeric height parameter' });
+                    return [2 /*return*/];
                 }
                 return [4 /*yield*/, (0, imageProcess_1.imageProcess)(req, res, next)];
             case 1:

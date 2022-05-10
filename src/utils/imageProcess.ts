@@ -8,21 +8,26 @@ import { NextFunction } from 'express-serve-static-core';
 const fullDir = path.join(__dirname, '/../../public/assets/full/');
 const thumbDir = path.join(__dirname, '/../../public/assets/thumb/');
 
-const imageProcess = (req: Request, res: Response, next: NextFunction) => {
+const imageProcess = async (req: Request,res: Response,next: NextFunction):Promise<any> => {
   const width = Number(req.query.width);
   const height = Number(req.query.height);
   const name = req.query.filename + '.jpg';
-
-  sharp(fullDir + name)
-    .resize(width as number, height as number)
-    .toFile(thumbDir + name, (err) => {
-      if (err) res.send({ err: 'File Not Found' });
-      else next();
+  await sharp(fullDir + name).resize(width as number, height as number).toFile(thumbDir + name,async (err) => {
+      if (err) {
+        try {
+          res.send({ err: 'File Not Found' });
+        } catch (e) { //for unit testing
+          req.query.msg = "File Not Found";
+        }
+      } else {
+        req.query.msg = "Processed";//for unit testing
+        next();
+      }
     });
 };
 
-const sendImage = (req: Request, res: Response, next: NextFunction) => {
-  const name = req.query.filename + '.jpg';
+const sendImage = (req: Request, res: Response, next: NextFunction): void => {
+  const name: string = req.query.filename + '.jpg';
   res.sendFile(path.join(thumbDir, name), (err) => {
     if (err) {
       res.send('Error while uploading');
@@ -37,7 +42,7 @@ const checkImageExistence = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   const width = Number(req.query.width);
   const height = Number(req.query.height);
   const name = req.query.filename + '.jpg';

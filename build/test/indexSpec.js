@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var supertest_1 = __importDefault(require("supertest"));
 var index_1 = __importDefault(require("../index"));
+var imageProcess_1 = require("../utils/imageProcess");
 var request = (0, supertest_1.default)(index_1.default);
 describe('Test endpoint responses', function () {
     it('gets the api endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -56,7 +57,7 @@ describe('Test endpoint responses', function () {
         });
     }); });
 });
-describe('Test Image Processing Functions', function () {
+describe('Test Image Processing Functions via request', function () {
     it('test api for image not in full folder so throw error', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -88,7 +89,7 @@ describe('Test Image Processing Functions', function () {
                 case 0: return [4 /*yield*/, request.get('/api/image?filename=name&height=150')];
                 case 1:
                     response = _a.sent();
-                    expect(response.body.err).toBe('You must provide width');
+                    expect(response.body.err).toBe('You must provide numeric width parameter');
                     return [2 /*return*/];
             }
         });
@@ -100,7 +101,7 @@ describe('Test Image Processing Functions', function () {
                 case 0: return [4 /*yield*/, request.get('/api/image?filename=name&width=150')];
                 case 1:
                     response = _a.sent();
-                    expect(response.body.err).toBe('You must provide height');
+                    expect(response.body.err).toBe('You must provide numeric height parameter');
                     return [2 /*return*/];
             }
         });
@@ -129,4 +130,28 @@ describe('Test Image Processing Functions', function () {
             }
         });
     }); });
+});
+describe('Unit Test for Image Processing Functions', function () {
+    it('Test resizing of existing image', function (done) {
+        var res = {};
+        var req = {
+            query: { filename: 'lol', height: '150', width: '150' },
+        };
+        (0, imageProcess_1.imageProcess)(req, res, function () { });
+        setTimeout(function () {
+            expect(req.query.msg).toBe("Processed");
+            done();
+        }, 20);
+    });
+    it('Test resizing of non existing image', function (done) {
+        var res = {};
+        var req = {
+            query: { filename: 'lool', height: '150', width: '150' },
+        };
+        (0, imageProcess_1.imageProcess)(req, res, function () { });
+        setTimeout(function () {
+            expect(req.query.msg).toBe("File Not Found");
+            done();
+        }, 20);
+    });
 });
