@@ -51,30 +51,31 @@ describe('Test Image Processing Functions via request', () => {
 });
 
 describe('Unit Test for Image Processing Functions', () => {
-  it('Test resizing of existing image',  (done) => {
-    let res = {} as unknown as Response;
-    let req = {
+  it('Test resizing of existing image', (done) => {
+    const res = {} as unknown as Response;
+    const req = {
       query: { filename: 'lol', height: '150', width: '150' },
     } as unknown as Request;
-    imageProcess(req, res, () => {})
-    setTimeout(()=>{
-      expect(req.query.msg).toBe("Processed");
+    imageProcess(req, res, (): void => {
+      console.log('finish image processing');
+    });
+    setTimeout(() => {
+      expect(req.query.msg).toBe('Processed');
       done();
-    },20)
-    
+    }, 20);
   });
 
-  it('Test resizing of non existing image',  (done) => {
-    let res = {} as unknown as Response;
-    let req = {
+  it('Test resizing of non existing image', (done) => {
+    const res = {} as unknown as Response;
+    const req = {
       query: { filename: 'lool', height: '150', width: '150' },
     } as unknown as Request;
-    imageProcess(req, res, () => {})
-    setTimeout(()=>{
-      expect(req.query.msg).toBe("File Not Found");
+    imageProcess(req, res, (): void => {
+      console.log('finish image processing');
+    });
+    setTimeout(() => {
+      expect(req.query.msg).toBe('File Not Found');
       done();
-    },20)
-    
+    }, 20);
   });
-
 });

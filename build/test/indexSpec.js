@@ -137,9 +137,11 @@ describe('Unit Test for Image Processing Functions', function () {
         var req = {
             query: { filename: 'lol', height: '150', width: '150' },
         };
-        (0, imageProcess_1.imageProcess)(req, res, function () { });
+        (0, imageProcess_1.imageProcess)(req, res, function () {
+            console.log('finish image processing');
+        });
         setTimeout(function () {
-            expect(req.query.msg).toBe("Processed");
+            expect(req.query.msg).toBe('Processed');
             done();
         }, 20);
     });
@@ -148,9 +150,11 @@ describe('Unit Test for Image Processing Functions', function () {
         var req = {
             query: { filename: 'lool', height: '150', width: '150' },
         };
-        (0, imageProcess_1.imageProcess)(req, res, function () { });
+        (0, imageProcess_1.imageProcess)(req, res, function () {
+            console.log('finish image processing');
+        });
         setTimeout(function () {
-            expect(req.query.msg).toBe("File Not Found");
+            expect(req.query.msg).toBe('File Not Found');
             done();
         }, 20);
     });

@@ -15,7 +15,7 @@ const imageAPI = express.Router();
 imageAPI.get(
   '/',
   checkImageExistence,
-  async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+  (req: Request, res: Response, next: NextFunction): void => {
     if (!req.query.filename) {
       res.send({ err: 'You must provide filename' });
       return;
@@ -26,7 +26,7 @@ imageAPI.get(
       res.send({ err: 'You must provide numeric height parameter' });
       return;
     }
-    await imageProcess(req, res, next);
+    imageProcess(req, res, next);
   },
   sendImage
 );

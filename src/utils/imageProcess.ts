@@ -8,25 +8,32 @@ import { NextFunction } from 'express-serve-static-core';
 const fullDir = path.join(__dirname, '/../../public/assets/full/');
 const thumbDir = path.join(__dirname, '/../../public/assets/thumb/');
 
-const imageProcess = async (req: Request,res: Response,next: NextFunction):Promise<any> => {
+const imageProcess = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const width = Number(req.query.width);
   const height = Number(req.query.height);
   const name = req.query.filename + '.jpg';
-  await sharp(fullDir + name).resize(width as number, height as number).toFile(thumbDir + name,async (err) => {
+  sharp(fullDir + name)
+    .resize(width as number, height as number)
+    .toFile(thumbDir + name, async (err) => {
       if (err) {
         try {
           res.send({ err: 'File Not Found' });
-        } catch (e) { //for unit testing
-          req.query.msg = "File Not Found";
+        } catch (e) {
+          //for unit testing
+          req.query.msg = 'File Not Found';
         }
       } else {
-        req.query.msg = "Processed";//for unit testing
+        req.query.msg = 'Processed'; //for unit testing
         next();
       }
     });
 };
 
-const sendImage = (req: Request, res: Response, next: NextFunction): void => {
+const sendImage = (req: Request, res: Response): void => {
   const name: string = req.query.filename + '.jpg';
   res.sendFile(path.join(thumbDir, name), (err) => {
     if (err) {
@@ -53,7 +60,7 @@ const checkImageExistence = (
       const data = await sharp(thumbDir + name).metadata();
       if (data.width == width && data.height == height) {
         //check if the dimentions of existing file is the same as provided
-        sendImage(req, res, next);
+        sendImage(req, res);
       } else {
         next();
       }

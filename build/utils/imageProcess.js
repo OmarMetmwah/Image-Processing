@@ -46,39 +46,33 @@ var fs_1 = __importDefault(require("fs"));
 // Prepare directories
 var fullDir = path_1.default.join(__dirname, '/../../public/assets/full/');
 var thumbDir = path_1.default.join(__dirname, '/../../public/assets/thumb/');
-var imageProcess = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var width, height, name;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                width = Number(req.query.width);
-                height = Number(req.query.height);
-                name = req.query.filename + '.jpg';
-                return [4 /*yield*/, (0, sharp_1.default)(fullDir + name).resize(width, height).toFile(thumbDir + name, function (err) { return __awaiter(void 0, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            if (err) {
-                                try {
-                                    res.send({ err: 'File Not Found' });
-                                }
-                                catch (e) { //for unit testing
-                                    req.query.msg = "File Not Found";
-                                }
-                            }
-                            else {
-                                req.query.msg = "Processed"; //for unit testing
-                                next();
-                            }
-                            return [2 /*return*/];
-                        });
-                    }); })];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); };
+var imageProcess = function (req, res, next) {
+    var width = Number(req.query.width);
+    var height = Number(req.query.height);
+    var name = req.query.filename + '.jpg';
+    (0, sharp_1.default)(fullDir + name)
+        .resize(width, height)
+        .toFile(thumbDir + name, function (err) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            if (err) {
+                try {
+                    res.send({ err: 'File Not Found' });
+                }
+                catch (e) {
+                    //for unit testing
+                    req.query.msg = 'File Not Found';
+                }
+            }
+            else {
+                req.query.msg = 'Processed'; //for unit testing
+                next();
+            }
+            return [2 /*return*/];
+        });
+    }); });
+};
 exports.imageProcess = imageProcess;
-var sendImage = function (req, res, next) {
+var sendImage = function (req, res) {
     var name = req.query.filename + '.jpg';
     res.sendFile(path_1.default.join(thumbDir, name), function (err) {
         if (err) {
@@ -105,7 +99,7 @@ var checkImageExistence = function (req, res, next) {
                     data = _a.sent();
                     if (data.width == width && data.height == height) {
                         //check if the dimentions of existing file is the same as provided
-                        sendImage(req, res, next);
+                        sendImage(req, res);
                     }
                     else {
                         next();
